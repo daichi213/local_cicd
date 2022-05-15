@@ -1,0 +1,26 @@
+version: "3"
+services:
+  gitbucket:
+    build:
+      context: ./gitbucket
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - "8089:8080"
+    volumes:
+      - ./gitbucket/gitbucket-data:/gitbucket
+    environment:
+      - GRANT_SUDO=1
+    tty: true
+  jenkins:
+    build:
+      context: ./jenkins_home
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    environment:
+      - GRANT_SUDO=1
+    tty: true

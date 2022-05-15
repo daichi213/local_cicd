@@ -1,0 +1,11 @@
+Host node1
+  HostName 127.0.0.1
+  User vagrant
+  Port 2001
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile C:/Users/besta/app/ansible-tutorial/.vagrant/machines/node1/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+
