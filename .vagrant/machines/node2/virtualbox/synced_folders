@@ -1,0 +1,1 @@
+{"virtualbox":{"/var/lib/jenkins":{"guestpath":"/var/lib/jenkins","hostpath":"C:/Users/besta/app/local_cicd/jenkins_home","disabled":false,"__vagrantfile":true}}}

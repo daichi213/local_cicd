@@ -10,20 +10,9 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "base"
-  
+
   config.vm.define :node1 do |node|
-    node.vm.box = "generic/ubuntu2204"
-    node.vm.network :forwarded_port, guest: 22, host: 2201, id: "ssh"
-    node.vm.network :private_network, ip: "192.168.33.11"
-
-    node.vm.provision "shell", inline: <<-SHELL
-      apt-get update
-      apt-get install -y ansible
-    SHELL
-  end
-
-  config.vm.define :node2 do |node|
-    node.vm.box = "generic/ubuntu2204"
+    node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
     node.vm.network :forwarded_port, guest: 8080, host: 8002, id: "http"
     node.vm.network :private_network, ip: "192.168.33.12"
@@ -32,37 +21,36 @@ Vagrant.configure("2") do |config|
       apt-get update
       apt-get install -y default-jdk
       apt-get install openjdk-7-jre
-      wget http://ftp.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
-      tar zxvf apache-tomcat-10.0.20.tar.gz
-      wget https://github.com/gitbucket/gitbucket/releases/download/4.37.2/gitbucket.war
-      mv gitbucket.war apache-tomcat-10.0.20/webapps/
+      mkdir /usr/lib/tomcat
+      wget -P /usr/lib/tomcat http://ftp.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
+      tar zxvf /usr/lib/tomcat/apache-tomcat-10.0.20.tar.gz
+      wget -P /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/ https://github.com/gitbucket/gitbucket/releases/download/4.37.2/gitbucket.war
+      # mv gitbucket.war apache-tomcat-10.0.20/webapps/
+      java -jar /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/gitbucket.war
     SHELL
   end
 
-  config.vm.define :node3 do |node|
-    node.vm.box = "generic/ubuntu2204"
+  config.vm.define :node2 do |node|
+    node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2203, id: "ssh"
     node.vm.network :forwarded_port, guest: 8080, host: 8003, id: "http"
     node.vm.network :private_network, ip: "192.168.33.13"
 
     node.vm.provision "shell", inline: <<-SHELL
+      wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add - 
+      sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
       apt-get update
       apt-get install -y default-jdk
       apt-get install -y jenkins
     SHELL
-    node.vm.synced_folder "./jenkins_home", "/var/jenkins_home"
+    node.vm.synced_folder "./jenkins_home", "/var/lib/jenkins"
   end
 
-  config.vm.define :node4 do |node|
-    node.vm.box = "generic/ubuntu2204"
+  config.vm.define :node3 do |node|
+    node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2204, id: "ssh"
     node.vm.network :forwarded_port, guest: 80, host: 8004, id: "http"
     node.vm.network :private_network, ip: "192.168.33.14"
-
-    node.vm.provision "shell", inline: <<-SHELL
-      apt-get update
-      apt-get install -y jenkins
-    SHELL
   end
 
   # Disable automatic box update checking. If you disable this, then
