@@ -22,12 +22,14 @@ Vagrant.configure("2") do |config|
       apt-get install -y default-jdk
       apt-get install openjdk-7-jre
       mkdir /usr/lib/tomcat
+      cd /usr/lib/tomcat
       wget -P /usr/lib/tomcat http://ftp.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
       tar zxvf /usr/lib/tomcat/apache-tomcat-10.0.20.tar.gz
       wget -P /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/ https://github.com/gitbucket/gitbucket/releases/download/4.37.2/gitbucket.war
       # mv gitbucket.war apache-tomcat-10.0.20/webapps/
-      java -jar /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/gitbucket.war
+      # java -jar /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/gitbucket.war
     SHELL
+    node.vm.synced_folder "./gitbucket_home", "/usr/lib/tomcat"
   end
 
   config.vm.define :node2 do |node|
@@ -46,11 +48,25 @@ Vagrant.configure("2") do |config|
     node.vm.synced_folder "./jenkins_home", "/var/lib/jenkins"
   end
 
-  config.vm.define :node3 do |node|
+  config.vm.define :local do |node|
     node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2204, id: "ssh"
     node.vm.network :forwarded_port, guest: 80, host: 8004, id: "http"
     node.vm.network :private_network, ip: "192.168.33.14"
+  end
+
+  config.vm.define :development do |node|
+    node.vm.box = "generic/ubuntu2110"
+    node.vm.network :forwarded_port, guest: 22, host: 2205, id: "ssh"
+    node.vm.network :forwarded_port, guest: 80, host: 8005, id: "http"
+    node.vm.network :private_network, ip: "192.168.33.15"
+  end
+
+  config.vm.define :production do |node|
+    node.vm.box = "generic/ubuntu2110"
+    node.vm.network :forwarded_port, guest: 22, host: 2206, id: "ssh"
+    node.vm.network :forwarded_port, guest: 80, host: 8006, id: "http"
+    node.vm.network :private_network, ip: "192.168.33.16"
   end
 
   # Disable automatic box update checking. If you disable this, then
