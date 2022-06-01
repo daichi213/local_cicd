@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "base"
 
-  config.vm.define :node1 do |node|
+  config.vm.define :git do |node|
     node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
     node.vm.network :forwarded_port, guest: 8080, host: 8002, id: "http"
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     node.vm.synced_folder "./gitbucket_home", "/usr/lib/tomcat"
   end
 
-  config.vm.define :node2 do |node|
+  config.vm.define :jenkins do |node|
     node.vm.box = "generic/ubuntu2110"
     node.vm.network :forwarded_port, guest: 22, host: 2203, id: "ssh"
     node.vm.network :forwarded_port, guest: 8080, host: 8003, id: "http"
