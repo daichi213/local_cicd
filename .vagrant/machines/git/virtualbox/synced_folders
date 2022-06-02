@@ -1,1 +1,1 @@
-{"virtualbox":{"/usr/lib/tomcat":{"guestpath":"/usr/lib/tomcat","hostpath":"C:/Users/besta/app/local_cicd/gitbucket_home","disabled":false,"__vagrantfile":true}}}
+{"virtualbox":{"/etc/systemd/system":{"guestpath":"/etc/systemd/system","hostpath":"C:/Users/besta/app/local_cicd/gitbucket_home/service","disabled":false,"__vagrantfile":true}}}

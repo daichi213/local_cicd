@@ -16,20 +16,16 @@ Vagrant.configure("2") do |config|
     node.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
     node.vm.network :forwarded_port, guest: 8080, host: 8002, id: "http"
     node.vm.network :private_network, ip: "192.168.33.12"
+    node.vm.synced_folder "./gitbucket_home/service", "/etc/systemd/system"
 
     node.vm.provision "shell", inline: <<-SHELL
       apt-get update
       apt-get install -y default-jdk
       apt-get install openjdk-7-jre
-      mkdir /usr/lib/tomcat
-      cd /usr/lib/tomcat
-      wget -P /usr/lib/tomcat http://ftp.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
-      tar zxvf /usr/lib/tomcat/apache-tomcat-10.0.20.tar.gz
-      wget -P /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/ https://github.com/gitbucket/gitbucket/releases/download/4.37.2/gitbucket.war
-      # mv gitbucket.war apache-tomcat-10.0.20/webapps/
-      # java -jar /usr/lib/tomcat/apache-tomcat-10.0.20/webapps/gitbucket.war
+      cd /usr/lib
+      wget -P /usr/lib https://github.com/gitbucket/gitbucket/releases/download/4.37.2/gitbucket.war
+      systemctl start gitbucket_daemonized.service
     SHELL
-    node.vm.synced_folder "./gitbucket_home", "/usr/lib/tomcat"
   end
 
   config.vm.define :jenkins do |node|

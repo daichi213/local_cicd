@@ -1,0 +1,9 @@
+[Unit]
+Description=webserver Daemon
+
+[Service]
+ExecStart=/usr/bin/java -jar /usr/lib/gitbucket.war
+User=root
+
+[Install]
+WantedBy=multi-user.target
